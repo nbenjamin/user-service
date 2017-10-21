@@ -35,7 +35,5 @@ public class UsersApiSteps {
     public void return_httpstatus_httpstatus() throws Throwable {
 
     }
-
-
 }
 

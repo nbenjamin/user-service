@@ -45,8 +45,8 @@ public class UserController {
     @GetMapping("/{firstName}/{lastName}")
     public User getUserByFirstAndLastName(@PathVariable("firstName") String firstName,
                                           @PathVariable("lastName") String lastName) {
-        return Optional.ofNullable(userRepository.findByFirstNameAndLastName(firstName, lastName)
-                .get()).orElseThrow(() -> new CoreException("Unable to find user with firstName"+
+        return Optional.ofNullable(userRepository.findByFirstNameAndLastName(firstName, lastName))
+                .get().orElseThrow(() -> new CoreException("Unable to find user with firstName"+
                 firstName + " lastName "+ lastName));
     }
 
