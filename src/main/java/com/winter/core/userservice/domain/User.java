@@ -2,6 +2,7 @@ package com.winter.core.userservice.domain;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,6 +23,7 @@ public class User implements Serializable {
     private Integer userId;
     private String firstName;
     private String lastName;
+    @Column(unique = true)
     private String userName;
     private String password;
 }
