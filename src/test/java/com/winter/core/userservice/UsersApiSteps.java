@@ -71,7 +71,33 @@ public class UsersApiSteps {
     public void validate_the_user_response_with_the_below_User_details(DataTable userDataTable)
             throws Throwable {
         User user = userDataTable.asList(User.class).get(0);
-        System.out.println(user);
+    }
+
+    // Scenario Outline: view existing user
+
+    @When("^client GET a request user with resource url /core/users/\"([^\"]*)\"/\"([^\"]*)\"$")
+    public void client_GET_a_request_user_with_resource_url_core_users(String firstName, String
+            lastName) throws Throwable {
+
+        responseEntity = restTemplate.getForEntity(getUriComponentsBuilder().pathSegment
+                (firstName).pathSegment(lastName).build().toUriString(),User.class);
+    }
+
+    @Then("^return User with httpStatus \"([^\"]*)\"$")
+    public void return_User_with_httpStatus(String httpStatus) throws Throwable {
+        assertThat(responseEntity.getStatusCode(), is(equalTo(HttpStatus.valueOf(httpStatus))));
+
+    }
+
+    @Then("^verify the username \"([^\"]*)\"$")
+    public void verify_the_username(String userName) throws Throwable {
+        User user = responseEntity.getBody();
+        if(null != user) {
+            assertThat(user.getUserName(), is(equalTo(userName)));
+        } else {
+            assertThat(user, is(equalTo(null)));
+        }
+
     }
 
     private UriComponentsBuilder getUriComponentsBuilder() throws Exception {

@@ -18,7 +18,7 @@ public class UserExceptionHandler {
 
     @ExceptionHandler(CoreException.class)
     public ResponseEntity<?> handleUserException(CoreException e) {
-        return new ResponseEntity<User>(HttpStatus.CONFLICT);
+        return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
