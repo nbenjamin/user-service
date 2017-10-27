@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable("id") Integer userId) {
+    public User getUser(@PathVariable("id") Long userId) {
         return Optional.ofNullable(userRepository.findById(userId)).get().orElseThrow(() -> new
                 CoreException("User not found"));
     }

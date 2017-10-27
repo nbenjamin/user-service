@@ -37,7 +37,7 @@ public class UserControllerTest {
 
     @Test
     public void getAllUsers_returnAllUsers_successfully(){
-        List<User> users = Collections.singletonList(new User(1, "Ryan", "Adam", "ryanAdam",
+        List<User> users = Collections.singletonList(new User(1L, "Ryan", "Adam", "ryanAdam",
                 "abc123"));
         when(userRepository.findAll()).thenReturn(users);
         List<User> expected = subject.getAllUsers();
@@ -56,25 +56,25 @@ public class UserControllerTest {
 
     @Test
     public void getUser_byValidId_returnUser(){
-        User user = new User(1, "Ryan", "Adam", "ryanAdam",
+        User user = new User(1L, "Ryan", "Adam", "ryanAdam",
                 "abc123");
-        when(userRepository.findById(1)).thenReturn(Optional.of(user));
-        User expected = subject.getUser(1);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        User expected = subject.getUser(1L);
         assertThat(expected.getFirstName(), is(equalTo("Ryan")));
-        verify(userRepository, times(1)).findById(1);
+        verify(userRepository, times(1)).findById(1L);
     }
 
     @Test
     public void getUser_byInValidId_returnException(){
-        when(userRepository.findById(1)).thenReturn(Optional.empty());
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
         thrown.expect(CoreException.class);
         thrown.expectMessage("User not found");
-        subject.getUser(1);
+        subject.getUser(1L);
     }
 
     @Test
     public void getUserByFirstAndLastName_byNames_returnUser(){
-        User user = new User(1, "Ryan", "Adam", "ryanAdam",
+        User user = new User(1L, "Ryan", "Adam", "ryanAdam",
                 "abc123");
         when(userRepository.findByFirstNameAndLastName("Ryan", "Adam")).thenReturn(Optional.of
                 (user));
