@@ -1,4 +1,7 @@
-package com.winter.core.userservice.domain;
+package com.winter.core.userservice.service;
+
+import com.winter.core.userservice.domain.CoreException;
+import com.winter.core.userservice.domain.User;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +28,7 @@ public class UserExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public void handleDuplicateUserCreationFailure(final HttpServletRequest request,
                                                    DataIntegrityViolationException e) {
+        LOGGER.info(request.getRequestURI());
         LOGGER.info("User already exist {}", e);
 
     }

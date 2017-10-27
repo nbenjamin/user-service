@@ -35,20 +35,22 @@ public class GroupController {
     public ResponseEntity<Group> createGroup(@RequestBody Group group, @PathVariable("id")
             Long userId) {
         group.setUser(this.userRepository.findById(userId).get());
-        this.groupRepository.save(group);
-        return new ResponseEntity<Group>(HttpStatus.CREATED);
+        groupRepository.save(group);
+        return Optional.ofNullable(groupRepository.save(group)).map(g ->new ResponseEntity<Group>
+                (g, HttpStatus.CREATED) ).orElseThrow(() -> new CoreException("Unable to create " +
+                "group now, please try again"));
     }
 
     @GetMapping("/{id}/groups")
-    public List<Group> createGroup(@PathVariable("id")
+    public List<Group> getGroupsById(@PathVariable("id")
             Long userId) {
-        return StreamSupport.stream(this.groupRepository.findByUserUserId(userId).spliterator(), false)
+        return StreamSupport.stream(groupRepository.findByUserUserId(userId).spliterator(), false)
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/{id}/groups")
-    public Group createGroup(@RequestParam("name") String groupName) {
-        return Optional.ofNullable(this.groupRepository.findByGroupName(groupName).get()).orElseThrow(
+    @GetMapping("/{groupName}/groups")
+    public Group getGroupByName(@RequestParam("name") String groupName) {
+        return Optional.ofNullable(groupRepository.findByGroupName(groupName).get()).orElseThrow(
                 () -> new CoreException("Unable to find group information by name"));
     }
 }
