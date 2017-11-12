@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public class UserController {
         return users;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/users/{id}")
     public User getUser(@PathVariable("id") Long userId) {
         return Optional.ofNullable(userRepository.findById(userId)).get().orElseThrow(() -> new
                 CoreException("User not found"));
@@ -49,6 +50,14 @@ public class UserController {
         return Optional.ofNullable(userRepository.findByFirstNameAndLastName(firstName, lastName))
                 .get().orElseThrow(() -> new CoreException("Unable to find user with firstName"+
                 firstName + " lastName "+ lastName));
+    }
+
+    @GetMapping("/login")
+    public User getUserByUserNameAndPassword(@RequestParam("userName") String userName,
+                                          @RequestParam("password") String password) {
+        return Optional.ofNullable(userRepository.findByUserNameAndPassword(userName, password))
+                .get().orElseThrow(() -> new CoreException("Unable to find user with userName"+
+                        userName + " password "+ password));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

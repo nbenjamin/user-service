@@ -41,9 +41,8 @@ public class GroupController {
     public ResponseEntity<Group> createGroup(@RequestBody Group group, @PathVariable("id")
             Long userId) {
         User user = this.userRepository.findById(userId).get();
-        Group groupPersisted = groupRepository.save(group);
-        groupPersisted.addUser(user);
-        return Optional.ofNullable(groupRepository.save(groupPersisted)).map(g ->new
+        group.addUser(user);
+        return Optional.ofNullable(groupRepository.save(group)).map(g ->new
                 ResponseEntity<Group>
                 (g, HttpStatus.CREATED) ).orElseThrow(() -> new CoreException("Unable to create " +
                 "group now, please try again"));
