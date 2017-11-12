@@ -1,11 +1,12 @@
 package com.winter.core.userservice.adapter.api;
 
-import com.winter.core.userservice.adapter.repository.UserRepository;
+import com.winter.core.userservice.adapter.repository.jpa.UserRepository;
 import com.winter.core.userservice.domain.CoreException;
 import com.winter.core.userservice.domain.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,7 +51,7 @@ public class UserController {
                 firstName + " lastName "+ lastName));
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> createUser(@RequestBody User user) {
        return Optional.ofNullable(userRepository.save(user)).map( t -> new ResponseEntity<User>
                 (t, HttpStatus.CREATED)).orElseThrow( () -> new CoreException("Unable to insert " +

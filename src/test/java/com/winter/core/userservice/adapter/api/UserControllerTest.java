@@ -7,7 +7,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.winter.core.userservice.adapter.repository.UserRepository;
+import com.winter.core.userservice.adapter.repository.jpa.UserRepository;
 import com.winter.core.userservice.domain.CoreException;
 import com.winter.core.userservice.domain.User;
 
@@ -37,7 +37,7 @@ public class UserControllerTest {
 
     @Test
     public void getAllUsers_returnAllUsers_successfully(){
-        List<User> users = Collections.singletonList(new User(1L, "Ryan", "Adam", "ryanAdam",
+        List<User> users = Collections.singletonList(new User("Ryan", "Adam", "ryanAdam",
                 "abc123"));
         when(userRepository.findAll()).thenReturn(users);
         List<User> expected = subject.getAllUsers();
@@ -56,7 +56,7 @@ public class UserControllerTest {
 
     @Test
     public void getUser_byValidId_returnUser(){
-        User user = new User(1L, "Ryan", "Adam", "ryanAdam",
+        User user = new User( "Ryan", "Adam", "ryanAdam",
                 "abc123");
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         User expected = subject.getUser(1L);
@@ -74,7 +74,7 @@ public class UserControllerTest {
 
     @Test
     public void getUserByFirstAndLastName_byNames_returnUser(){
-        User user = new User(1L, "Ryan", "Adam", "ryanAdam",
+        User user = new User("Ryan", "Adam", "ryanAdam",
                 "abc123");
         when(userRepository.findByFirstNameAndLastName("Ryan", "Adam")).thenReturn(Optional.of
                 (user));

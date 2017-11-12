@@ -1,4 +1,4 @@
-package com.winter.core.userservice.adapter.repository;
+package com.winter.core.userservice.adapter.repository.jpa;
 
 import com.winter.core.userservice.domain.Group;
 
@@ -11,7 +11,6 @@ import java.util.Optional;
  */
 public interface GroupRepository extends CrudRepository<Group, Long> {
 
-    Iterable<Group> findByUserUserId(Long userId);
     Optional<Group> findByGroupName(String groupName);
 
 }

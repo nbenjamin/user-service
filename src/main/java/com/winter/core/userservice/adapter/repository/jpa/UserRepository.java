@@ -1,4 +1,4 @@
-package com.winter.core.userservice.adapter.repository;
+package com.winter.core.userservice.adapter.repository.jpa;
 
 import com.winter.core.userservice.domain.User;
 
