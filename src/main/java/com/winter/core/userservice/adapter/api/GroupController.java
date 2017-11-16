@@ -2,7 +2,6 @@ package com.winter.core.userservice.adapter.api;
 
 
 import com.winter.core.userservice.adapter.repository.jpa.GroupRepository;
-import com.winter.core.userservice.adapter.repository.jpa.UserGroupRepository;
 import com.winter.core.userservice.adapter.repository.jpa.UserRepository;
 import com.winter.core.userservice.domain.CoreException;
 import com.winter.core.userservice.domain.Group;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/core")
@@ -34,8 +32,6 @@ public class GroupController {
     private GroupRepository groupRepository;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private UserGroupRepository userGroupRepository;
 
     @PostMapping("/users/{id}/groups")
     public ResponseEntity<Group> createGroup(@RequestBody Group group, @PathVariable("id")
@@ -51,16 +47,17 @@ public class GroupController {
     @GetMapping("/groups/{id}")
     public List<Group> getGroupsById(@PathVariable("id")
                                              Long userId) {
-        List<UserGroup> userGroups = userGroupRepository.findAllByUser_UserId(userId);
-        List<Group> groups = userGroups.stream().map(userGroup -> userGroup.getGroup()).collect(Collectors.toList());
-        return groups;
+//        List<UserGroup> userGroups = userGroupRepository.findAllByUser_UserId(userId);
+//        List<Group> groups = userGroups.stream().map(userGroup -> userGroup.getGroup()).collect(Collectors.toList());
+//        return groups;
+        return null;
     }
 
     @DeleteMapping("/users/{userId}/groups/{groupId}")
     public ResponseEntity<Void> getGroupByName(@PathVariable("userId") Long userId, @PathVariable
             ("groupId") Long
             groupId) {
-        userGroupRepository.deleteUserGroupByGroup_GroupIdAndUser_UserId(userId, groupId);
+        groupRepository.deleteUserFromUser(userId, groupId);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
@@ -68,13 +65,11 @@ public class GroupController {
     public void updateGroupWithUsers(@PathVariable("groupId") Long userId, @PathVariable
             ("groupId") Long groupId, @RequestParam
             ("userIds") List<Long> userIds) {
-        UserGroup userGroup = new UserGroup();
         Group group = groupRepository.findById(groupId).get();
-        group.setGroupId(groupId);
         userIds.stream().map(aLong -> userRepository.findById(aLong)).forEach(u -> {
-            group.addUser(u.get());
+            group.getUserGroups().add(new UserGroup(u.get(), group));
         });
-        userGroup.setGroup(group);
+        userRepository.save(userRepository.findById(userId).get());
         groupRepository.save(group);
 
     }

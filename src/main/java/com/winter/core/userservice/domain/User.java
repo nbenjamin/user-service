@@ -1,5 +1,7 @@
 package com.winter.core.userservice.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,8 +34,12 @@ public class User implements Serializable {
     @Column(unique = true)
     private String userName;
     private String password;
+    @JsonBackReference
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserGroup> userGroups = new ArrayList<>();
+
+    @Transient
+    private List<Group> groups = new ArrayList<>();
 
     public User(Long userId) {
         this.userId = userId;

@@ -3,6 +3,7 @@ package com.winter.core.userservice.adapter.api;
 import com.winter.core.userservice.adapter.repository.jpa.UserRepository;
 import com.winter.core.userservice.domain.CoreException;
 import com.winter.core.userservice.domain.User;
+import com.winter.core.userservice.domain.UserGroup;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,10 +39,13 @@ public class UserController {
         return users;
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public User getUser(@PathVariable("id") Long userId) {
-        return Optional.ofNullable(userRepository.findById(userId)).get().orElseThrow(() -> new
+        User user = Optional.ofNullable(userRepository.findById(userId)).get().orElseThrow(() -> new
                 CoreException("User not found"));
+        List<UserGroup> userGroups = user.getUserGroups();
+        userGroups.parallelStream().map(userGroup -> userGroup.getGroup()).forEach(user.getGroups():: add);
+        return user;
     }
 
     @GetMapping("/{firstName}/{lastName}")
