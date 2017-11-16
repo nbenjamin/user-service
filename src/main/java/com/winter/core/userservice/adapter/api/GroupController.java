@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/core")
@@ -33,9 +34,12 @@ public class GroupController {
     @Autowired
     private UserRepository userRepository;
 
-    @PostMapping("/users/{id}/groups")
-    public ResponseEntity<Group> createGroup(@RequestBody Group group, @PathVariable("id")
+    @PostMapping("/users/{userId}/groups")
+    public ResponseEntity<Group> createGroup(@RequestBody Group group, @PathVariable("userId")
             Long userId) {
+        if(groupRepository.isGroupNameExistsForUser(userId, group.getGroupName())) {
+            return new ResponseEntity<Group>(group, HttpStatus.CONFLICT);
+        }
         User user = this.userRepository.findById(userId).get();
         group.addUser(user);
         return Optional.ofNullable(groupRepository.save(group)).map(g ->new
@@ -44,13 +48,17 @@ public class GroupController {
                 "group now, please try again"));
     }
 
-    @GetMapping("/groups/{id}")
-    public List<Group> getGroupsById(@PathVariable("id")
-                                             Long userId) {
-//        List<UserGroup> userGroups = userGroupRepository.findAllByUser_UserId(userId);
-//        List<Group> groups = userGroups.stream().map(userGroup -> userGroup.getGroup()).collect(Collectors.toList());
-//        return groups;
-        return null;
+    @GetMapping("/groups/{groupId}")
+    public Group getGroupsById(@PathVariable("groupId")
+                                             Long groupId) {
+
+        Group group = Optional.ofNullable(groupRepository.findById(groupId)).get().orElseThrow(() ->
+                new
+                CoreException("Group not found"));
+        List<UserGroup> userGroups = group.getUserGroups();
+        userGroups.parallelStream().map(userGroup -> userGroup.getUser()).forEach(group.getUsers()::
+                add);
+        return group;
     }
 
     @DeleteMapping("/users/{userId}/groups/{groupId}")

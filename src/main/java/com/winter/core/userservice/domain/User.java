@@ -1,6 +1,7 @@
 package com.winter.core.userservice.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class User implements Serializable {
     private List<UserGroup> userGroups = new ArrayList<>();
 
     @Transient
+    @JsonIgnore
     private List<Group> groups = new ArrayList<>();
 
     public User(Long userId) {

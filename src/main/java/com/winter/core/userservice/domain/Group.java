@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -53,5 +54,8 @@ public class Group implements Serializable{
     public void removeUser(User user) {
         this.userGroups.remove(user);
     }
+
+    @Transient
+    private List<User> users = new ArrayList<>();
 
 }
